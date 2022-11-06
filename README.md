@@ -14,3 +14,11 @@ v16.3.0
 ```sh:jsファイル
 node answer/no_XXXX.js < input.txt
 ```
+
+```sh:tsファイル
+# 実行
+yarn ts-node answer/no_XXXX.ts < input.txt
+
+# 提出前にコンパイル
+tsc answer/no_XXXX.ts
+```
