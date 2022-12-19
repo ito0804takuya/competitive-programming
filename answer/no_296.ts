@@ -1,4 +1,4 @@
-namespace no48 {
+namespace no296 {
 
   function Main(input: string): void {
     let [sleepCount, hour, minute, interval] = input.split(' ').map(str => parseInt(str));
