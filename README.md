@@ -22,3 +22,7 @@ yarn ts-node answer/no_XXXX.ts < input.txt
 # 提出前にコンパイル
 tsc answer/no_XXXX.ts
 ```
+
+```sh:goファイル
+go run  answer/no_XXXX.go < input.txt
+```
