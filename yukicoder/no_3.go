@@ -13,44 +13,65 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 )
 
 func main() {
-	var n int64
+	// ゴール
+	var n int
 	fmt.Scan(&n)
-	fmt.Println(n)
 
-	result := 1
-	
-	if n == 1 {
-		fmt.Println(result)
-		return
+	// ゴールに到達する最短の移動数
+	results := make([]int, n+1)
+	results[1] = 1 // 開始のマスへも移動にカウントすることから
+
+	que := []int{1}
+
+	visited := make([]bool, n+1)
+	visited[0] = true
+	visited[1] = true
+
+	for len(que) > 0 {
+		// キューの先頭を取り出す
+		i := que[0]
+		que = que[1:]
+
+		bit := countBits(uint(i))
+		if bit == 0 {
+			continue
+		}
+
+		// 前に進む
+		next := i + bit
+		if next <= n && !visited[next] {
+			if next != n {
+				que = append(que, next)
+			}
+			visited[next] = true
+			results[next] = results[i] + 1
+		}
+
+		back := i - bit
+		if back > 0 && back < n && !visited[back] {
+			que = append(que, back)
+			visited[back] = true
+			results[back] = results[i] + 1
+		}
 	}
 
-	// 旧-------------------------
-	// ゴールから、ゴール-1 の 2進数 桁数 分前の要素を調べる
-	searchRange := len(strconv.FormatInt(n-1, 2))
-	fmt.Println(searchRange)
-		// その要素から、その位置のNの2進数の1のビット数分で、ゴールに到達できるのかを調べる
-	// 到達できない場合は、次の要素に移る
-	// 到達できる場合は、その要素をゴールとみなして、同じことを行う
-	// 旧-------------------------
+	// resultが0のときは、そこにたどり着いたことがない（たどり着けない）ということなので、指定の-1を出力
+	if results[n] == 0 {
+		results[n] = -1
+	}
 
-	// 新-------------------------
-	// '1'がスタート地点
-	// '1'がゴール地点かどうかを判定
-	// '1'の1のビット数を取得
-	// ビット数分、前に進むことができるか調べる
-		// 前に進める場合、それがゴール地点かどうかを判定
-			// ゴールじゃない場合は、その数が[ダメだったリスト]にあるか判定
-				// なかった場合、その数を[あとで調べるリスト]に入れる。
-				// あった場合、.....
-		// 前に進めない場合（つまりゴールよりも大きい数値になってしまう場合、その数を[ダメだったリスト]に入れる。）
-	// ビット数分、後ろに進むことができるか調べる
-		// 後ろに進める場合、その数が[ダメだったリスト]にあるか判定
-			// 無かった場合、その数を[あとで調べるリスト]に入れる。
-			// あった場合、.....
-		// 後ろに進めない場合（つまり'1'以下になってしまう場合）、.....
-	
+	fmt.Println(results[n])
+}
+
+// 数値を2進数に変換した際の'1'の数を返す
+func countBits(num uint) int {
+	count := 0
+	for num > 0 {
+		count += int(num & 1) // 最下位ビットを1とAND演算（→ 1であれば1を、0であれば0を返す）
+		num >>= 1             // 1ビット右にシフト
+	}
+	return count
 }
